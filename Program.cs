@@ -1,9 +1,28 @@
 ﻿using AoC21.Problems;
+using System.Diagnostics;
 
-Problem problem; 
+IEnumerable<Type> problems = AppDomain.CurrentDomain.GetAssemblies()
+    .SelectMany(assembly => assembly.GetTypes())
+    .Where(type => type.IsClass && type.IsSubclassOf(typeof(Problem)));
 
-problem = new P1(@".\Inputs\P1.txt");
-Console.WriteLine($"P1 = {problem.Compute()}");
+string res = string.Empty;
+Stopwatch sw = new();
 
-problem = new P2(@".\Inputs\P2.txt");
-Console.WriteLine($"P2 = {problem.Compute()}");
+foreach (var problemType in problems)
+{
+    object? instance = Activator.CreateInstance
+        (problemType, new object[] { @$".\Inputs\{problemType.Name}.txt" });
+
+    if (instance != null)
+    {
+        Problem problem = (Problem)instance;
+
+        sw.Start();
+        res = problem.Compute();
+        sw.Stop();
+
+        Console.WriteLine($"{problemType.Name} => {res} ({sw.ElapsedMilliseconds} ms)");
+
+        sw.Reset();
+    }
+}

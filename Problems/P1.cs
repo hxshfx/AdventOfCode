@@ -14,7 +14,7 @@ namespace AoC21.Problems
         {
             if (currentLine == null && iter.MoveNext()) currentLine = iter.Current;
             
-            if (!iter.MoveNext()) return result;
+            else if (!iter.MoveNext()) return result;
 
             if (Convert.ToInt32(currentLine) < Convert.ToInt32(iter.Current)) result++;
 
