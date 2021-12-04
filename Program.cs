@@ -1,27 +1,38 @@
 ﻿using AoC21.Problems;
 using System.Diagnostics;
 
+Console.OutputEncoding = System.Text.Encoding.UTF8;
+
 IEnumerable<Type> problems = AppDomain.CurrentDomain.GetAssemblies()
     .SelectMany(assembly => assembly.GetTypes())
     .Where(type => type.IsClass && type.IsSubclassOf(typeof(Problem)));
 
-string res = string.Empty;
+string[] solutions = new string[]
+{
+    "1676", "1706", "1698735", "1594785890", "1131506", "7863147"
+};
+
+string path = string.Empty, result = string.Empty;
+char success = '\0';
+
+Problem problem;
 Stopwatch sw = new();
 
-foreach (var problemType in problems)
+foreach ((Type, string) tuple in problems.Zip(solutions))
 {
-    object? instance = Activator.CreateInstance
-        (problemType, new object[] { @$".\Inputs\{problemType.Name}.txt" });
+    path = @$".\Inputs\{tuple.Item1.Name.Split('_')[0]}.txt";
+    object? instance = Activator.CreateInstance(tuple.Item1, new object[] { path });
 
     if (instance != null)
     {
-        Problem problem = (Problem)instance;
+        problem = (Problem)instance;
 
         sw.Start();
-        res = problem.Compute();
+        result = problem.Compute();
         sw.Stop();
 
-        Console.WriteLine($"{problemType.Name} => {res} ({sw.ElapsedMilliseconds} ms)");
+        success = tuple.Item2.Equals(result) ? '\u2713' : '\u2A2F';
+        Console.WriteLine($"{tuple.Item1.Name} :: {success} \u2192 {result} ({sw.ElapsedMilliseconds} ms)");
 
         sw.Reset();
     }

@@ -1,33 +1,27 @@
 ﻿
 namespace AoC21.Problems
 {
-    internal class P2 : Problem
+    internal class P1_2 : Problem
     {
         private const short WINDOW_SIZE = 3;
 
-        public P2(string inputPath) : base(inputPath) { }
+        public P1_2(string inputPath) : base(inputPath) { }
 
         public override string Compute()
-        {
-            return ComputeRecursive(Lines, 0, null).ToString();
-        }
+            => ComputeRecursive(Lines.GetEnumerator(), 0, null).ToString();
+
 
         private static int ComputeRecursive(IEnumerator<string> iter, int result, string[]? currentWindow)
         {
-            try
-            {
-                if (currentWindow == null) currentWindow = GetFirstWindow(iter);
+            if (currentWindow == null) currentWindow = GetFirstWindow(iter);
 
-                string[] nextWindow = GetNextWindow(iter, currentWindow);
+            string[] nextWindow = GetNextWindow(iter, currentWindow);
 
-                if (IsNextWindowBigger(currentWindow, nextWindow)) result++;
+            if (nextWindow.Length == 0) return result;
 
-                return ComputeRecursive(iter, result, nextWindow);
-            }
-            catch
-            {
-                return result;
-            }
+            if (IsNextWindowBigger(currentWindow, nextWindow)) result++;
+
+            return ComputeRecursive(iter, result, nextWindow);
         }
 
         private static string[] GetFirstWindow(IEnumerator<string> iter)
@@ -41,7 +35,7 @@ namespace AoC21.Problems
 
         private static string[] GetNextWindow(IEnumerator<string> iter, string[] currentWindow)
         {
-            if (!iter.MoveNext()) throw new Exception("Not enough lines to build a window");
+            if (!iter.MoveNext()) return Array.Empty<string>();
 
             string[] nextWindow = new string[WINDOW_SIZE]
             {

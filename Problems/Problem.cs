@@ -3,11 +3,11 @@ namespace AoC21.Problems
 {
     internal abstract class Problem
     {
-        public IEnumerator<string> Lines { get; }
+        public IEnumerable<string> Lines { get; }
 
-        public Problem(string inputPath)
+        protected Problem(string inputPath)
         {
-            Lines = File.ReadLines(inputPath).GetEnumerator();
+            Lines = File.ReadLines(inputPath);
         }
 
         public abstract string Compute();

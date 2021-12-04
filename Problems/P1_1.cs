@@ -1,14 +1,13 @@
 ﻿
 namespace AoC21.Problems
 {
-    internal class P1 : Problem
+    internal class P1_1 : Problem
     {
-        public P1(string inputPath) : base(inputPath) { }
+        public P1_1(string inputPath) : base(inputPath) { }
 
         public override string Compute()
-        {
-            return ComputeRecursive(Lines, 0, null).ToString();
-        }
+            => ComputeRecursive(Lines.GetEnumerator(), 0, null).ToString();
+
 
         private static int ComputeRecursive(IEnumerator<string> iter, int result, string? currentLine)
         {
