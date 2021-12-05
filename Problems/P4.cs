@@ -5,15 +5,11 @@ namespace AoC21.Problems
 {
     internal class P4 : Problem
     {
-        public override Part Part1 { get; set; }
-        public override Part Part2 { get; set; }
+        public override (Part, Part) Parts { get; set; }
 
 
         public P4(string inputPath) : base(inputPath)
-        {
-            Part1 = new P4_1();
-            Part2 = new P4_2();
-        }
+            => Parts = (new P4_1(), new P4_2());
 
 
         internal class P4_1 : Part

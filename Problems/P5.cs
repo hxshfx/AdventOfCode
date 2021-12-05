@@ -4,15 +4,11 @@ namespace AoC21.Problems
 {
     internal class P5 : Problem
     {
-        public override Part Part1 { get; set; }
-        public override Part Part2 { get; set; }
+        public override (Part, Part) Parts { get; set; }
 
 
         public P5(string inputPath) : base(inputPath)
-        {
-            Part1 = new P5_1();
-            Part2 = new P5_2();
-        }
+            => Parts = (new P5_1(), new P5_2());
 
 
         internal class P5_1 : Part
@@ -86,24 +82,14 @@ namespace AoC21.Problems
 
             public bool IsVertical()
                 => Start.Item1 == End.Item1 || Start.Item2 == End.Item2;
-
-            public bool IsDiagonal()
-                => Start.Item1 != End.Item1 && Start.Item2 != End.Item2;
         }
 
         internal class Diagram
         {
-            string[,] Board { get; set; }
+            int[,] Board { get; set; }
 
             public Diagram(int tall, int wide)
-            {
-                Board = new string[tall + 1, wide + 1];
-                for (int i = 0;  i <= tall; i++)
-                {
-                    for (int j = 0; j <= wide; j++)
-                        Board[i, j] = ".";
-                }
-            }
+                => Board = new int[tall + 1, wide + 1];
 
             public void UpdateNonDiagonal(Line line)
             {
@@ -111,7 +97,7 @@ namespace AoC21.Problems
                 IEnumerable<(int, int)> linePath = GetNonDiagonalLinePath(line, fixedX, GetNonDiagonalLength(line, fixedX));
 
                 foreach ((int, int) position in linePath)
-                    UpdatePosition(position, Board[position.Item2, position.Item1]);
+                    Board[position.Item2, position.Item1]++;
             }
 
             public void UpdateDiagonal(Line line)
@@ -119,7 +105,7 @@ namespace AoC21.Problems
                 IEnumerable<(int, int)> res = GetDiagonalLinePath(line, GetDiagonalLength(line));
 
                 foreach ((int, int) position in res)
-                    UpdatePosition(position, Board[position.Item2, position.Item1]);
+                    Board[position.Item2, position.Item1]++;
             }
 
             public int GetOverlapSum()
@@ -128,21 +114,17 @@ namespace AoC21.Problems
                 for (int i = 0; i < Board.GetLength(0); i++)
                 {
                     for (int j = 0; j < Board.GetLength(1); j++)
-                        res = !Board[i, j].Equals(".") && Convert.ToInt32(Board[i, j]) > 1 ? res + 1 : res;
+                        res = Board[i, j] > 1 ? res + 1 : res;
                 }
 
                 return res;
             }
 
-            private void UpdatePosition((int, int) position, string found)
-                => Board[position.Item2, position.Item1] = ".".Equals(found) ? "1" : $"{Convert.ToInt32(found) + 1}";
-
             private static bool IsFixedX(Line line)
                 => line.Start.Item1 == line.End.Item1;
 
             private static int GetNonDiagonalLength(Line line, bool fixedX)
-                => fixedX ? line.End.Item2 - line.Start.Item2 + 1 :
-                    line.End.Item1 - line.Start.Item1 + 1;
+                => fixedX ? line.End.Item2 - line.Start.Item2 + 1 : line.End.Item1 - line.Start.Item1 + 1;
 
             private static int GetDiagonalLength(Line line)
                 => Math.Abs(line.End.Item1 - line.Start.Item1) + 1;
