@@ -1,5 +1,6 @@
-﻿using AoC21.Problems;
-using System.Diagnostics;
+﻿using AoC21.Utils;
+
+#pragma warning disable CS8619
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -7,33 +8,35 @@ IEnumerable<Type> problems = AppDomain.CurrentDomain.GetAssemblies()
     .SelectMany(assembly => assembly.GetTypes())
     .Where(type => type.IsClass && type.IsSubclassOf(typeof(Problem)));
 
-string[] solutions = new string[]
-{
-    "1676", "1706", "1698735", "1594785890", "1131506", "7863147"
-};
+IEnumerable<string> paths = Enumerable.Zip(Enumerable.Repeat(@".\Inputs\{0}.txt", problems.Count()), problems)
+    .Select(t => string.Format(t.First, t.Second.Name));
 
-string path = string.Empty, result = string.Empty;
-char success = '\0';
+IEnumerable<(string, string)> solutions = Enumerable.Zip(
+    typeof(Solutions).GetFields().Where(fi => fi.Name.Contains("_1"))
+        .Select(fi => Convert.ToString(fi.GetRawConstantValue())),
+    typeof(Solutions).GetFields().Where(fi => fi.Name.Contains("_2"))
+        .Select(fi => Convert.ToString(fi.GetRawConstantValue())));
 
+bool correct;
+object? instance;
 Problem problem;
-Stopwatch sw = new();
+Tuple<Result, Result> results;
 
-foreach ((Type, string) tuple in problems.Zip(solutions))
+foreach ((Type, string, (string, string)) tuple in Enumerable.Zip(problems, paths, solutions))
 {
-    path = @$".\Inputs\{tuple.Item1.Name.Split('_')[0]}.txt";
-    object? instance = Activator.CreateInstance(tuple.Item1, new object[] { path });
+    instance = Activator.CreateInstance(tuple.Item1, new object[] { tuple.Item2 });
 
     if (instance != null)
     {
         problem = (Problem)instance;
+        results = problem.Solve();
 
-        sw.Start();
-        result = problem.Compute();
-        sw.Stop();
+        correct = tuple.Item3.Item1 == results.Item1.Answer && tuple.Item3.Item2 == results.Item2.Answer;
 
-        success = tuple.Item2.Equals(result) ? '\u2713' : '\u2A2F';
-        Console.WriteLine($"{tuple.Item1.Name} :: {success} \u2192 {result} ({sw.ElapsedMilliseconds} ms)");
-
-        sw.Reset();
+        Console.WriteLine($"Problem {tuple.Item1.Name[1..]} :::::: {(correct ? '\u2713' : '\u2A2F')}");
+        Console.WriteLine($"\t=> {tuple.Item1.Name}_1 :: {results.Item1}");
+        Console.WriteLine($"\t=> {tuple.Item1.Name}_2 :: {results.Item2}");
     }
 }
+
+#pragma warning restore CS8619
