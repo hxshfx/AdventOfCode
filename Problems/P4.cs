@@ -5,10 +5,15 @@ namespace AoC21.Problems
 {
     internal class P4 : Problem
     {
-        public P4(string inputPath) : base(inputPath) { }
+        public override Part Part1 { get; set; }
+        public override Part Part2 { get; set; }
 
-        public override Tuple<Result, Result> Solve()
-            => new(new P4_1().Compute(Lines), new P4_2().Compute(Lines));
+
+        public P4(string inputPath) : base(inputPath)
+        {
+            Part1 = new P4_1();
+            Part2 = new P4_2();
+        }
 
 
         internal class P4_1 : Part
