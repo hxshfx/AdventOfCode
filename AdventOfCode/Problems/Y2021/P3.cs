@@ -1,6 +1,6 @@
-﻿using AoC21.Utils;
+﻿using AdventOfCode.Utils;
 
-namespace AoC21.Problems
+namespace AdventOfCode.Problems.Y2021
 {
     internal class P3 : Problem
     {

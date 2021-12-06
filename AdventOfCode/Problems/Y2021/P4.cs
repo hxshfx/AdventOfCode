@@ -1,7 +1,7 @@
-﻿using AoC21.Utils;
+﻿using AdventOfCode.Utils;
 using System.Text.RegularExpressions;
 
-namespace AoC21.Problems
+namespace AdventOfCode.Problems.Y2021
 {
     internal class P4 : Problem
     {

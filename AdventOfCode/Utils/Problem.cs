@@ -1,5 +1,5 @@
 ﻿
-namespace AoC21.Utils
+namespace AdventOfCode.Utils
 {
     internal abstract class Problem
     {
