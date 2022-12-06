@@ -1,20 +1,15 @@
-﻿using AdventOfCode.Utils;
+﻿using CoreAoC.Entities;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace AdventOfCode.Problems.Y2020
 {
     internal class P8 : Problem
     {
-        public override (Part, Part) Parts { get; set; }
-
-
-        public P8(string inputPath) : base(inputPath)
-            => Parts = (new P8_1(), new P8_2());
-
-
         internal class P8_1 : Part
         {
-            public override Result Compute(IEnumerable<string> lines)
-                => new(ComputeRecursive(lines.ToList(), Enumerable.Repeat(false, lines.Count()).ToList(), 0, 0).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.ToList(), Enumerable.Repeat(false, lines.Count()).ToList(), 0, 0).ToString();
 
 
             private static int ComputeRecursive(IList<string> lines, IList<bool> executed, int index, int result)
@@ -35,8 +30,8 @@ namespace AdventOfCode.Problems.Y2020
 
         internal class P8_2 : Part
         {
-            public override Result Compute(IEnumerable<string> lines)
-                => new(ComputeRecursive(lines.ToList(), Enumerable.Repeat(false, lines.Count()).ToList(), 0, 0).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.ToList(), Enumerable.Repeat(false, lines.Count()).ToList(), 0, 0).ToString();
 
 
             private static int ComputeRecursive(IList<string> lines, IList<bool> executed, int index, int result)

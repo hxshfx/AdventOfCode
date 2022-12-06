@@ -6,6 +6,8 @@
 *.user
 *.sln.docstates
 run.bat
+sonar.bat
+*.bak
 
 # Build results
 

@@ -1,22 +1,17 @@
-﻿using AdventOfCode.Utils;
+﻿using CoreAoC.Entities;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace AdventOfCode.Problems.Y2020
 {
     internal class P7 : Problem
     {
-        public override (Part, Part) Parts { get; set; }
-
         private readonly static Bag SHINY_BAG = new("shiny gold");
-
-
-        public P7(string inputPath) : base(inputPath)
-            => Parts = (new P7_1(), new P7_2());
-
 
         internal class P7_1 : Part
         {
-            public override Result Compute(IEnumerable<string> lines)
-                => new(ComputeRecursive(lines.GetEnumerator()).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.GetEnumerator()).ToString();
 
 
             private static int ComputeRecursive(IEnumerator<string> iter)
@@ -51,13 +46,10 @@ namespace AdventOfCode.Problems.Y2020
             {
                 int result = 0;
 
-                foreach (Bag bag in bagSet)
+                foreach (Bag bag in bagSet.Select(b => b).Where(b => BagContainsShinyBag(ruleSet, found, b, false)))
                 {
-                    if (BagContainsShinyBag(ruleSet, found, bag, false))
-                    {
-                        result++;
-                        found = found.Append(bag);
-                    }
+                    result++;
+                    found = found.Append(bag);
                 }
 
                 return result - 1;
@@ -82,8 +74,8 @@ namespace AdventOfCode.Problems.Y2020
 
         internal class P7_2 : Part
         {
-            public override Result Compute(IEnumerable<string> lines)
-                => new(ComputeRecursive(lines.GetEnumerator()).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.GetEnumerator()).ToString();
 
 
             private static int ComputeRecursive(IEnumerator<string> iter)
@@ -117,7 +109,7 @@ namespace AdventOfCode.Problems.Y2020
         }
 
 
-        private class Bag
+        private sealed class Bag
         {
             public string Colour { get; set; }
 
@@ -136,7 +128,7 @@ namespace AdventOfCode.Problems.Y2020
                 => Colour;
         }
 
-        private class Rule
+        private sealed class Rule
         {
             public Bag Key { get; set; }
             public IEnumerable<(int, Bag)> Values { get; set; }

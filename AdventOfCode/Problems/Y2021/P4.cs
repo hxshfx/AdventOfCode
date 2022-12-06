@@ -1,21 +1,16 @@
-﻿using AdventOfCode.Utils;
+﻿using CoreAoC.Entities;
 using System.Text.RegularExpressions;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace AdventOfCode.Problems.Y2021
 {
     internal class P4 : Problem
     {
-        public override (Part, Part) Parts { get; set; }
-
-
-        public P4(string inputPath) : base(inputPath)
-            => Parts = (new P4_1(), new P4_2());
-
-
         internal class P4_1 : Part
         {
-            public override Result Compute(IEnumerable<string> lines)
-                => new(ComputeRecursive(lines).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines).ToString();
 
 
             private static int ComputeRecursive(IEnumerable<string> lines)
@@ -43,8 +38,8 @@ namespace AdventOfCode.Problems.Y2021
 
         internal class P4_2 : Part
         {
-            public override Result Compute(IEnumerable<string> lines)
-                => new(ComputeRecursive(lines).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines).ToString();
 
 
             private static int ComputeRecursive(IEnumerable<string> lines)

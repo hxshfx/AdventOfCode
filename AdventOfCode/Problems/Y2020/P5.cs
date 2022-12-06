@@ -1,20 +1,15 @@
-﻿using AdventOfCode.Utils;
+﻿using CoreAoC.Entities;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace AdventOfCode.Problems.Y2020
 {
     internal class P5 : Problem
     {
-        public override (Part, Part) Parts { get; set; }
-
-
-        public P5(string inputPath) : base(inputPath)
-            => Parts = (new P5_1(), new P5_2());
-
-
         internal class P5_1 : Part
         {
-            public override Result Compute(IEnumerable<string> lines)
-                => new(ComputeRecursive(lines.GetEnumerator(), 0).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.GetEnumerator(), 0).ToString();
 
 
             private static int ComputeRecursive(IEnumerator<string> iter, int result)
@@ -44,8 +39,8 @@ namespace AdventOfCode.Problems.Y2020
 
         internal class P5_2 : Part
         {
-            public override Result Compute(IEnumerable<string> lines)
-                => new(ComputeRecursive(lines.GetEnumerator(), new List<int>()).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.GetEnumerator(), new List<int>()).ToString();
 
 
             private static int ComputeRecursive(IEnumerator<string> iter, IList<int> ids)

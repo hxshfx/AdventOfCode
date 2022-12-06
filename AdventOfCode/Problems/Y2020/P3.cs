@@ -1,17 +1,12 @@
-﻿using AdventOfCode.Utils;
+﻿using CoreAoC.Entities;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace AdventOfCode.Problems.Y2020
 {
     internal class P3 : Problem
     {
-        public override (Part, Part) Parts { get; set; }
-
         private const char TREE = '#';
-
-
-        public P3(string inputPath) : base(inputPath)
-            => Parts = (new P3_1(), new P3_2());
-
 
         internal class P3_1 : Part
         {
@@ -19,8 +14,8 @@ namespace AdventOfCode.Problems.Y2020
             private const int COL_MOVEMENT = 3;
 
 
-            public override Result Compute(IEnumerable<string> lines)
-                => new(ComputeRecursive(lines).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines).ToString();
 
 
             private static int ComputeRecursive(IEnumerable<string> lines)
@@ -53,8 +48,8 @@ namespace AdventOfCode.Problems.Y2020
             private static readonly int[] ROW_MOVEMENTS = new int[] { 1, 1, 1, 1, 2 };
             private static readonly int[] COL_MOVEMENTS = new int[] { 1, 3, 5, 7, 1 };
 
-            public override Result Compute(IEnumerable<string> lines)
-                => new(ComputeRecursive(lines).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines).ToString();
 
 
             private static long ComputeRecursive(IEnumerable<string> lines)

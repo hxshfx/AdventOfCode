@@ -1,20 +1,15 @@
-﻿using AdventOfCode.Utils;
+﻿using CoreAoC.Entities;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace AdventOfCode.Problems.Y2021
 {
     internal class P1 : Problem
     {
-        public override (Part, Part) Parts { get; set; }
-
-
-        public P1(string inputPath) : base(inputPath)
-            => Parts = (new P1_1(), new P1_2());
-
-
         internal class P1_1 : Part
         {
-            public override Result Compute(IEnumerable<string> lines)
-                => new(ComputeRecursive(lines.GetEnumerator(), 0, null).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.GetEnumerator(), 0, null).ToString();
 
             private static int ComputeRecursive(IEnumerator<string> iter, int result, string? currentLine)
             {
@@ -32,12 +27,12 @@ namespace AdventOfCode.Problems.Y2021
         {
             private const short WINDOW_SIZE = 3;
 
-            public override Result Compute(IEnumerable<string> lines)
-            => new(ComputeRecursive(lines.GetEnumerator(), 0, null).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+            => ComputeRecursive(lines.GetEnumerator(), 0, null).ToString();
 
             private static int ComputeRecursive(IEnumerator<string> iter, int result, string[]? currentWindow)
             {
-                if (currentWindow == null) currentWindow = GetFirstWindow(iter);
+                currentWindow ??= GetFirstWindow(iter);
 
                 string[] nextWindow = GetNextWindow(iter, currentWindow);
 

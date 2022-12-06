@@ -1,20 +1,15 @@
-﻿using AdventOfCode.Utils;
+﻿using CoreAoC.Entities;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace AdventOfCode.Problems.Y2021
 {
     internal class P3 : Problem
     {
-        public override (Part, Part) Parts { get; set; }
-
-
-        public P3(string inputPath) : base(inputPath)
-            => Parts = (new P3_1(), new P3_2());
-
-
         internal class P3_1 : Part
         {
-            public override Result Compute(IEnumerable<string> lines)
-                => new(ComputeNonRecursive(lines).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+                => ComputeNonRecursive(lines).ToString();
 
 
             private static int ComputeNonRecursive(IEnumerable<string> lines)
@@ -37,8 +32,8 @@ namespace AdventOfCode.Problems.Y2021
 
         internal class P3_2 : Part
         {
-            public override Result Compute(IEnumerable<string> lines)
-                => new(ComputeRecursive(lines).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines).ToString();
 
 
             private static int ComputeRecursive(IEnumerable<string> lines)

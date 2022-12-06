@@ -1,23 +1,19 @@
-﻿using AdventOfCode.Utils;
+﻿using CoreAoC.Entities;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace AdventOfCode.Problems.Y2020
 {
     internal class P4 : Problem
     {
-        public override (Part, Part) Parts { get; set; }
-
         private static readonly string[] REQUIRED_TAGS = new string[] { "byr", "ecl", "eyr", "hcl", "hgt", "iyr", "pid" };
-
-
-        public P4(string inputPath) : base(inputPath)
-            => Parts = (new P4_1(), new P4_2());
 
 
         internal class P4_1 : Part
         {
-            public override Result Compute(IEnumerable<string> lines)
-                => new(ComputeRecursive(lines.GetEnumerator(), 0, null).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.GetEnumerator(), 0, null).ToString();
 
             private static int ComputeRecursive(IEnumerator<string> iter, int result, string[]? currentPassport)
             {
@@ -49,8 +45,8 @@ namespace AdventOfCode.Problems.Y2020
             private static readonly string[] VALID_ECS = new string[] { "amb", "blu", "brn", "gry", "grn", "hzl", "oth" };
             private static readonly Regex regex = new(@"(\d+)([a-zA-Z]+)");
 
-            public override Result Compute(IEnumerable<string> lines)
-                => new(ComputeRecursive(lines.GetEnumerator(), 0, null).ToString(), Sw.ElapsedMilliseconds);
+            protected override string Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.GetEnumerator(), 0, null).ToString();
 
 
             private static int ComputeRecursive(IEnumerator<string> iter, int result, string[]? currentPassport)
