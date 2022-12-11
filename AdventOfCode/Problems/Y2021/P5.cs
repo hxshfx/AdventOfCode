@@ -1,15 +1,15 @@
 ﻿using CoreAoC.Entities;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("UnitTests")]
+[assembly: InternalsVisibleTo("TestingProject")]
 namespace AdventOfCode.Problems.Y2021
 {
     internal class P5 : Problem
     {
         internal class P5_1 : Part
         {
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeNonRecursive(lines.GetEnumerator()).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeNonRecursive(lines.GetEnumerator());
 
 
             private static int ComputeNonRecursive(IEnumerator<string> iter)
@@ -26,7 +26,7 @@ namespace AdventOfCode.Problems.Y2021
 
         internal class P5_2 : Part
         {
-            protected override string Compute(IEnumerable<string> lines)
+            protected override object Compute(IEnumerable<string> lines)
                 => ComputeNonRecursive(lines.GetEnumerator()).ToString();
 
 

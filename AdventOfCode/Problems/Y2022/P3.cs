@@ -1,14 +1,14 @@
 ﻿using CoreAoC.Entities;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("UnitTests")]
+[assembly: InternalsVisibleTo("TestingProject")]
 namespace AdventOfCode.Problems.Y2022
 {
     internal class P3 : Problem
     {
         internal class P3_1 : Part
         {
-            protected override string Compute(IEnumerable<string> lines)
+            protected override object Compute(IEnumerable<string> lines)
                 => ComputeRecursive(lines.GetEnumerator(), 0).ToString();
 
             private static int ComputeRecursive(IEnumerator<string> iter, int result)
@@ -24,17 +24,14 @@ namespace AdventOfCode.Problems.Y2022
 
                 return ComputeRecursive(iter, result);
             }
-
-            private static int GetPriority(char c)
-                => char.IsLower(c) ? c - ('a' - 1) : c - ('A' - 1) + 26;
         }
 
         internal class P3_2 : Part
         {
-            protected override string Compute(IEnumerable<string> lines)
+            protected override object Compute(IEnumerable<string> lines)
                 => ComputeRecursive(lines.Select((l, i) => (l, i))
-                        .GroupBy(l => l.i / 3)
-                        .Select(l => l.Select(l => l.l).ToArray())
+                        .GroupBy(t => t.i / 3)
+                        .Select(t => t.Select(t => t.l).ToArray())
                     .GetEnumerator(), 0).ToString();
 
             private static int ComputeRecursive(IEnumerator<string[]> iter, int result)
@@ -51,9 +48,10 @@ namespace AdventOfCode.Problems.Y2022
 
                 return ComputeRecursive(iter, result);
             }
-
-            private static int GetPriority(char c)
-                => char.IsLower(c) ? c - ('a' - 1) : c - ('A' - 1) + 26;
         }
+
+
+        private static int GetPriority(char c)
+                => char.IsLower(c) ? c - ('a' - 1) : c - ('A' - 1) + 26;
     }
 }

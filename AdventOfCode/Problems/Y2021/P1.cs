@@ -1,15 +1,15 @@
 ﻿using CoreAoC.Entities;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("UnitTests")]
+[assembly: InternalsVisibleTo("TestingProject")]
 namespace AdventOfCode.Problems.Y2021
 {
     internal class P1 : Problem
     {
         internal class P1_1 : Part
         {
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeRecursive(lines.GetEnumerator(), 0, null).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.GetEnumerator(), 0, null);
 
             private static int ComputeRecursive(IEnumerator<string> iter, int result, string? currentLine)
             {
@@ -27,8 +27,8 @@ namespace AdventOfCode.Problems.Y2021
         {
             private const short WINDOW_SIZE = 3;
 
-            protected override string Compute(IEnumerable<string> lines)
-            => ComputeRecursive(lines.GetEnumerator(), 0, null).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+            => ComputeRecursive(lines.GetEnumerator(), 0, null);
 
             private static int ComputeRecursive(IEnumerator<string> iter, int result, string[]? currentWindow)
             {

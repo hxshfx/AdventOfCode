@@ -4,7 +4,8 @@ namespace CoreAoC.Interfaces
 {
     public interface ICalendarSolver
     {
-        public IEnumerable<int> ProblemsRange { get; }
+        public static IEnumerable<int> ProblemsRange
+            => Enumerable.Range(1, 25);
 
         public int Year { get; }
 

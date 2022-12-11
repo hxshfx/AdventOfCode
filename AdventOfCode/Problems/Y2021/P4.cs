@@ -2,15 +2,15 @@
 using System.Text.RegularExpressions;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("UnitTests")]
+[assembly: InternalsVisibleTo("TestingProject")]
 namespace AdventOfCode.Problems.Y2021
 {
-    internal class P4 : Problem
+    internal partial class P4 : Problem
     {
         internal class P4_1 : Part
         {
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeRecursive(lines).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines);
 
 
             private static int ComputeRecursive(IEnumerable<string> lines)
@@ -38,8 +38,8 @@ namespace AdventOfCode.Problems.Y2021
 
         internal class P4_2 : Part
         {
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeRecursive(lines).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines);
 
 
             private static int ComputeRecursive(IEnumerable<string> lines)
@@ -76,14 +76,14 @@ namespace AdventOfCode.Problems.Y2021
         }
 
 
-        internal class Bingo
+        internal partial class Bingo
         {
             public int[][] Board { get; set; }
             public bool IsCompleted { get; set; }
 
             public Bingo(IEnumerable<string> lines)
             {
-                Board = lines.Select(l => Regex.Split(l.Trim(), @"\s{1,}"))
+                Board = lines.Select(l => Regexp().Split(l.Trim()))
                     .Select(c => c.Select(i => Convert.ToInt32(i)).ToArray()).ToArray();
                 IsCompleted = false;
             }
@@ -112,6 +112,10 @@ namespace AdventOfCode.Problems.Y2021
 
             private static int[][] Transpose(int[][] board)
                 => Enumerable.Range(0, board.Length).Select(i => board.Select(j => j[i]).ToArray()).ToArray();
+
+
+            [GeneratedRegex("\\s{1,}")]
+            private static partial Regex Regexp();
         }
 
         private static IEnumerable<Bingo> GetAllBoards(IEnumerator<string> iter)

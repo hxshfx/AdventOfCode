@@ -5,68 +5,120 @@ using ShellProgressBar;
 
 namespace CoreAoC.Engine
 {
-    public class ProblemManager : IDisposable
+    internal class ProblemManager : IProblemManager
     {
-        public ICalendarSolver CalendarSolver { get; set; }
+        public IEnumerable<int> YearsImplemented { get; }
 
-        private readonly IDictionary<string, object> _solutions;
-        private readonly IProgressBar _yearProgress;
+        private readonly IDictionary<int, ICalendarSolver> _calendarSolvers;
 
 
-        public ProblemManager(ICalendarSolver calendarSolver, IProgressBar progress)
+        public ProblemManager(IEnumerable<int> yearsImplemented, IDictionary<int, ICalendarSolver> calendarSolvers)
         {
-            CalendarSolver = calendarSolver;
-
-            _solutions = DataReader.ReadSolutions(CalendarSolver.Year);
-            _yearProgress = progress.Spawn(calendarSolver.ProblemsRange.Count(), $" {CalendarSolver.Year} ", ProgressBarConfig.MainOptions);
+            YearsImplemented = yearsImplemented;
+            _calendarSolvers = calendarSolvers;
         }
 
 
-        public void CalendarReport()
+        public void SolveAll(IProgressBar progress)
         {
-            Task[] tasks = new Task[CalendarSolver.ProblemsRange.Count()];
+            IList<IProgressBar> yearsProgresses = YearsImplemented.Select(y
+                => progress.Spawn(ICalendarSolver.ProblemsRange.Max(), $" Advent Of Code {y} ", ProgressBarConfig.ProblemPackOptions))
+                    .Cast<IProgressBar>().ToList();
 
-            foreach (int day in CalendarSolver.ProblemsRange)
-                tasks[day - 1] = Task.Factory.StartNew(() => CalendarSolver.SolveOne(day))
-                    .ContinueWith((task) => ProgressChild(day, task.Result));
+            Task[] tasks = new Task[yearsProgresses.Count];
 
-            Task.WaitAll(tasks.ToArray());
+            foreach ((int year, int idx) in YearsImplemented.Zip(Enumerable.Range(0, yearsProgresses.Count)))
+                tasks[idx] = Task.Factory.StartNew(() => _calendarSolvers[year].SolveAll())
+                    .ContinueWith(result => AllResult(progress, yearsProgresses, result.Result, idx));
+
+            Task.WaitAll(tasks);
+        }
+
+        public void SolveCalendarYear(IProgressBar progress, int year)
+        {
+            IList<IProgressBar> yearProgresses = new List<IProgressBar>();
+            int maxTicks = ICalendarSolver.ProblemsRange.Max() / 5;
+
+            for (int i = 0; i < maxTicks; i++)
+                yearProgresses.Add(progress.Spawn(maxTicks, $"Problemas días {i * 5:D2} - {(i + 1) * 5:D2}", ProgressBarConfig.ProblemPackOptions));
+
+            Task[] tasks = new Task[ICalendarSolver.ProblemsRange.Count()];
+
+            foreach (int day in ICalendarSolver.ProblemsRange)
+                tasks[day - 1] = Task.Factory.StartNew(() => _calendarSolvers[year].SolveOne(day))
+                    .ContinueWith(result => YearResult(progress, yearProgresses, result.Result, day));
+
+            Task.WaitAll(tasks);
+        }
+
+        public void SolveCalendarYearAndDay(IProgressBar progress, int year, int day)
+        {
+            IProgressBar dayProgress = progress.Spawn(2, $" Problema {day} ", ProgressBarConfig.ProblemOptions);
+
+            Task.Factory.StartNew(() => _calendarSolvers[year].SolveOne(day))
+                .ContinueWith(task => YearAndDayResult(progress, dayProgress, task.Result)).Wait();
         }
 
 
-        public void Dispose()
+        private static void AllResult(IProgressBar progress, IList<IProgressBar> yearProgresses, IList<Tuple<Result, Result>?> result, int idx)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-            => _yearProgress.Dispose();
-
-
-        private void ProgressChild(int day, Tuple<Result, Result>? result)
-        {
-            IProgressBar dayBar = _yearProgress.Spawn(2, $"Día {day}", ProgressBarConfig.MainOptions);
-
-            if (result == null)
-                dayBar.Spawn(1, " sin hacer", ProgressBarConfig.ProblemUnimplementedOptions).Tick();
-            else if (IsNotSolvedYet(_solutions, result))
-                dayBar.Spawn(1, " doin", ProgressBarConfig.ProblemWorkingOptions).Tick();
-            else if (!IsResultCorrect(_solutions, result))
-                dayBar.Spawn(1, " ERROR ERROR", ProgressBarConfig.ProblemIncorrectOptions).Tick();
-            else
+            if (result != null)
             {
-                dayBar.Spawn(1, result.Item1.ToString(), ProgressBarConfig.ProblemCorrectOptions).Tick();
-                dayBar.Spawn(1, result.Item2.ToString(), ProgressBarConfig.ProblemCorrectOptions).Tick();
-            }
+                foreach (int _ in Enumerable.Range(0, result.Count))
+                {
+                    yearProgresses[idx].Tick();
+                    progress.Tick();
+                }
 
-            dayBar.Tick(2);
+                if (1d / 3 * 100 < yearProgresses[idx].Percentage && yearProgresses[idx].Percentage < 2d / 3 * 100)
+                    yearProgresses[idx].ForegroundColor = ConsoleColor.DarkYellow;
+                else if (2d / 3 * 100 < yearProgresses[idx].Percentage && yearProgresses[idx].Percentage < 100)
+                    yearProgresses[idx].ForegroundColor = ConsoleColor.Blue;
+            }
         }
 
-        private static bool IsNotSolvedYet(IDictionary<string, object> solutions, Tuple<Result, Result> result)
-            => !solutions.ContainsKey(result.Item1.PartName!) || !solutions.ContainsKey(result.Item2.PartName!);
+        private static void YearResult(IProgressBar progress, IList<IProgressBar> yearProgresses, Tuple<Result, Result>? result, int day)
+        {
+            if (result != null)
+            {
+                int idx = (day - 1) / 5;
 
-        private static bool IsResultCorrect(IDictionary<string, object> solutions, Tuple<Result, Result> result)
-            => solutions[result.Item1.PartName!].Equals(result.Item1.Answer) && solutions[result.Item2.PartName!].Equals(result.Item2.Answer);
+                yearProgresses[idx].Tick();
+                progress.Tick();
+
+                if (yearProgresses[idx].Percentage != 100d)
+                    yearProgresses[idx].ForegroundColor = ConsoleColor.DarkYellow;
+            }
+        }
+
+        private static void YearAndDayResult(IProgressBar progress, IProgressBar dayProgress, Tuple<Result, Result>? result)
+        {
+            if (result != null)
+            {
+                IProgressBar barP1, barP2;
+
+                if (!string.IsNullOrEmpty(result.Item2.Answer))
+                {
+                    barP2 = dayProgress.Spawn(1, $" Parte 2 ⸬ {result.Item2} ", ProgressBarConfig.PartImplementedOptions);
+
+                    dayProgress.Tick();
+                    progress.Tick();
+                }
+                else
+                    barP2 = dayProgress.Spawn(1, $" Parte 2 sin implementar ", ProgressBarConfig.PartUnimplementedOptions);
+                if (!string.IsNullOrEmpty(result.Item1.Answer))
+                {
+                    barP1 = dayProgress.Spawn(1, $" Parte 1 ⸬ {result.Item1} ", ProgressBarConfig.PartImplementedOptions);
+
+                    dayProgress.Tick();
+                    progress.Tick();
+                }
+                else
+                    barP1 = dayProgress.Spawn(1, $" Parte 1 sin implementar ", ProgressBarConfig.PartUnimplementedOptions);
+
+                barP1.Tick();
+                barP2.Tick();
+            }
+        }
     }
 }

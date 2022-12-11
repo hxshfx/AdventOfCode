@@ -1,25 +1,16 @@
 ﻿using CoreAoC.Entities;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("UnitTests")]
+[assembly: InternalsVisibleTo("TestingProject")]
 namespace AdventOfCode.Problems.Y2020
 {
     internal class P2 : Problem
     {
         internal class P2_1 : Part
         {
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeRecursive(lines.GetEnumerator(), 0).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.GetEnumerator(), 0, CheckIfValid);
 
-
-            private static int ComputeRecursive(IEnumerator<string> iter, int result)
-            {
-                if (!iter.MoveNext()) return result;
-
-                if (CheckIfValid(iter.Current)) result++;
-
-                return ComputeRecursive(iter, result);
-            }
 
             private static bool CheckIfValid(string line)
             {
@@ -28,14 +19,6 @@ namespace AdventOfCode.Problems.Y2020
                 string password = split[1].Trim();
 
                 return IsValid(CheckOccurrences(password, policy.Item3), policy.Item1, policy.Item2);
-            }
-
-            private static (int, int, char) GetPolicy(string line)
-            {
-                string[] split1 = line.Split(' ');
-                string[] split2 = split1[0].Split('-');
-
-                return (Convert.ToInt32(split2[0]), Convert.ToInt32(split2[1]), Convert.ToChar(split1[1]));
             }
 
             private static int CheckOccurrences(string password, char letter)
@@ -47,18 +30,9 @@ namespace AdventOfCode.Problems.Y2020
 
         internal class P2_2 : Part
         {
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeRecursive(lines.GetEnumerator(), 0).ToString();
-
-
-            private static int ComputeRecursive(IEnumerator<string> iter, int result)
-            {
-                if (!iter.MoveNext()) return result;
-
-                if (CheckIfValid(iter.Current)) result++;
-
-                return ComputeRecursive(iter, result);
-            }
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.GetEnumerator(), 0, CheckIfValid);
+            
 
             private static bool CheckIfValid(string line)
             {
@@ -69,16 +43,26 @@ namespace AdventOfCode.Problems.Y2020
                 return IsValid(password, policy);
             }
 
-            private static (int, int, char) GetPolicy(string line)
-            {
-                string[] split1 = line.Split(' ');
-                string[] split2 = split1[0].Split('-');
-
-                return (Convert.ToInt32(split2[0]), Convert.ToInt32(split2[1]), Convert.ToChar(split1[1]));
-            }
-
             private static bool IsValid(string password, (int, int, char) policy)
                 => password[policy.Item1 - 1] == policy.Item3 ^ password[policy.Item2 - 1] == policy.Item3;
+        }
+
+
+        private static int ComputeRecursive(IEnumerator<string> iter, int result, Func<string, bool> checker)
+        {
+            if (!iter.MoveNext()) return result;
+
+            if (checker.Invoke(iter.Current)) result++;
+
+            return ComputeRecursive(iter, result, checker);
+        }
+
+        private static (int, int, char) GetPolicy(string line)
+        {
+            string[] split1 = line.Split(' ');
+            string[] split2 = split1[0].Split('-');
+
+            return (Convert.ToInt32(split2[0]), Convert.ToInt32(split2[1]), Convert.ToChar(split1[1]));
         }
     }
 }

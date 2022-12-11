@@ -2,79 +2,38 @@
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
-[assembly: InternalsVisibleTo("UnitTests")]
+[assembly: InternalsVisibleTo("TestingProject")]
 namespace AdventOfCode.Problems.Y2020
 {
-    internal class P4 : Problem
+    internal partial class P4 : Problem
     {
         private static readonly string[] REQUIRED_TAGS = new string[] { "byr", "ecl", "eyr", "hcl", "hgt", "iyr", "pid" };
 
 
         internal class P4_1 : Part
         {
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeRecursive(lines.GetEnumerator(), 0, null).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.GetEnumerator(), 0, null, IsValid);
 
-            private static int ComputeRecursive(IEnumerator<string> iter, int result, string[]? currentPassport)
-            {
-                if (currentPassport == null) currentPassport = GetNextPassport(iter);
-
-                if (currentPassport.Length == 0) return result;
-
-                if (IsValid(string.Join(" ", currentPassport).Split(' '))) result++;
-
-                return ComputeRecursive(iter, result, GetNextPassport(iter));
-            }
-
-            private static string[] GetNextPassport(IEnumerator<string> iter)
-            {
-                IList<string> passport = new List<string>();
-
-                while (iter.MoveNext() && !iter.Current.Equals(string.Empty))
-                    passport.Add(iter.Current);
-
-                return passport.ToArray();
-            }
 
             private static bool IsValid(string[] passport)
-                => Enumerable.SequenceEqual(passport.Select(p => p.Split(':')[0]).Where(p => !p.Equals("cid")).OrderBy(p => p), REQUIRED_TAGS);
+                => passport.Select(p => p.Split(':')[0]).Where(p => !p.Equals("cid")).OrderBy(p => p).SequenceEqual(REQUIRED_TAGS);
         }
 
-        internal class P4_2 : Part
+        internal partial class P4_2 : Part
         {
             private static readonly string[] VALID_ECS = new string[] { "amb", "blu", "brn", "gry", "grn", "hzl", "oth" };
-            private static readonly Regex regex = new(@"(\d+)([a-zA-Z]+)");
-
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeRecursive(lines.GetEnumerator(), 0, null).ToString();
 
 
-            private static int ComputeRecursive(IEnumerator<string> iter, int result, string[]? currentPassport)
-            {
-                if (currentPassport == null) currentPassport = GetNextPassport(iter);
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.GetEnumerator(), 0, null, IsValid);
 
-                if (currentPassport.Length == 0) return result;
-
-                if (IsValid(string.Join(" ", currentPassport).Split(' '))) result++;
-
-                return ComputeRecursive(iter, result, GetNextPassport(iter));
-            }
-
-            private static string[] GetNextPassport(IEnumerator<string> iter)
-            {
-                IList<string> passport = new List<string>();
-
-                while (iter.MoveNext() && !iter.Current.Equals(string.Empty))
-                    passport.Add(iter.Current);
-
-                return passport.ToArray();
-            }
 
             private static bool IsValid(string[] passport)
             {
                 try
                 {
-                    bool result = Enumerable.SequenceEqual(passport.Select(p => p.Split(':')[0]).Where(p => !p.Equals("cid")).OrderBy(p => p), REQUIRED_TAGS);
+                    bool result = passport.Select(p => p.Split(':')[0]).Where(p => !p.Equals("cid")).OrderBy(p => p).SequenceEqual(REQUIRED_TAGS);
 
                     for (int i = 0; i < passport.Length && result; i++)
                         result &= IsValidField(passport[i].Split(':'));
@@ -94,7 +53,7 @@ namespace AdventOfCode.Problems.Y2020
                     "ecl" => IsEclValid(pair[1]),
                     "eyr" => IsEyrValid(Convert.ToInt32(pair[1])),
                     "hcl" => IsHclValid(pair[1]),
-                    "hgt" => IsHgtValid(regex.Match(pair[1])),
+                    "hgt" => IsHgtValid(Regexp().Match(pair[1])),
                     "iyr" => IsIyrValid(Convert.ToInt32(pair[1])),
                     "pid" => IsPidValud(pair[1]),
                     "cid" => true,
@@ -123,6 +82,32 @@ namespace AdventOfCode.Problems.Y2020
 
             private static bool IsPidValud(string value)
                 => value.Length == 9 && long.TryParse(value, out _);
+
+
+            [GeneratedRegex("(\\d+)([a-zA-Z]+)")]
+            private static partial Regex Regexp();
+        }
+
+
+        private static int ComputeRecursive(IEnumerator<string> iter, int result, string[]? currentPassport, Func<string[], bool> checker)
+        {
+            currentPassport ??= GetNextPassport(iter);
+
+            if (currentPassport.Length == 0) return result;
+
+            if (checker.Invoke(string.Join(" ", currentPassport).Split(' '))) result++;
+
+            return ComputeRecursive(iter, result, GetNextPassport(iter), checker);
+        }
+
+        private static string[] GetNextPassport(IEnumerator<string> iter)
+        {
+            IList<string> passport = new List<string>();
+
+            while (iter.MoveNext() && !iter.Current.Equals(string.Empty))
+                passport.Add(iter.Current);
+
+            return passport.ToArray();
         }
     }
 }

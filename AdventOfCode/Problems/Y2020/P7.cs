@@ -1,7 +1,7 @@
 ﻿using CoreAoC.Entities;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("UnitTests")]
+[assembly: InternalsVisibleTo("TestingProject")]
 namespace AdventOfCode.Problems.Y2020
 {
     internal class P7 : Problem
@@ -10,8 +10,8 @@ namespace AdventOfCode.Problems.Y2020
 
         internal class P7_1 : Part
         {
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeRecursive(lines.GetEnumerator()).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.GetEnumerator());
 
 
             private static int ComputeRecursive(IEnumerator<string> iter)
@@ -74,8 +74,8 @@ namespace AdventOfCode.Problems.Y2020
 
         internal class P7_2 : Part
         {
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeRecursive(lines.GetEnumerator()).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.GetEnumerator());
 
 
             private static int ComputeRecursive(IEnumerator<string> iter)

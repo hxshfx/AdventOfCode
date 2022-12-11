@@ -1,7 +1,7 @@
 ﻿using CoreAoC.Entities;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("UnitTests")]
+[assembly: InternalsVisibleTo("TestingProject")]
 namespace AdventOfCode.Problems.Y2021
 {
     internal class P6 : Problem
@@ -14,16 +14,16 @@ namespace AdventOfCode.Problems.Y2021
         {
             private const int DAYS = 80;
 
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeNonRecursive(lines, DAYS).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeNonRecursive(lines, DAYS);
         }
 
         internal class P6_2 : Part
         {
             private const int DAYS = 256;
 
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeNonRecursive(lines, DAYS).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeNonRecursive(lines, DAYS);
         }
 
 

@@ -1,43 +1,47 @@
 ﻿using CoreAoC.Entities;
+using CoreAoC.Factories.Interfaces;
+using CoreAoC.Interfaces;
 using Xunit;
 
-namespace UnitTests.Utils
+namespace TestingProject.Utils
 {
     public class YearTester
     {
-        protected readonly IDictionary<Problem, ProblemData> _problemData;
+        protected readonly IDictionary<Problem, IEnumerable<string>> _inputs;
+        protected readonly IDictionary<Problem, IEnumerable<string>> _samples;
+
+        protected readonly IDictionary<Problem, Tuple<Result, Result>> _inputsResults;
+        protected readonly IDictionary<Problem, Tuple<Result, Result>> _sampleResults;
 
 
-        public YearTester(int year)
+        public YearTester(IDataReaderFactory dataReaderFactory, int year)
         {
-            _problemData = new Dictionary<Problem, ProblemData>();
+            IInputReader inputReader = dataReaderFactory.CreateInputReader();
+            IOutputReader outputReader = dataReaderFactory.CreateOutputReader();
 
-            IDictionary<string, object> rawSolutions = DataReader.ReadSolutions(year);
+            _inputs = inputReader.GetInputs()[year];
+            _samples = inputReader.GetSamples()[year];
 
-            IEnumerable<Type> problems = AppDomain.CurrentDomain
-                .GetAssemblies().Single(a => a.GetName().Name!.Equals("AdventOfCode"))
-                .GetTypes().Where(t => t.IsSubclassOf(typeof(Problem)) && t.Namespace!.Contains($"Y{year}"));
-
-            foreach (Type problemType in problems)
-            {
-                Problem problem = (Problem)Activator.CreateInstance(problemType)!;
-
-                IEnumerable<string> sample = DataReader.ReadSample(year, problemType.Name);
-                Tuple<Result, Result> result = new(new(rawSolutions[problem.Parts.Item1.GetType().Name].ToString()!),
-                    new(rawSolutions[problem.Parts.Item2.GetType().Name].ToString()!));
-
-                _problemData.Add(problem, new(sample, result));
-            }
+            _inputsResults = outputReader.GetInputResults()[year];
+            _sampleResults = outputReader.GetSampleResults()[year];
         }
 
-        protected void AssertProblem(string problem)
+
+        protected void AssertInput(string problem)
+            => AssertProblem(_inputs, _inputsResults, problem);
+
+        protected void AssertSample(string problem)
+            => AssertProblem(_samples, _sampleResults, problem);
+
+
+        private static void AssertProblem(IDictionary<Problem, IEnumerable<string>> input, IDictionary<Problem, Tuple<Result, Result>> output, string problem)
         {
-            Skip.IfNot(_problemData.Any(kvp => problem.Equals(kvp.Key.GetType().Name)), "Problema no implementado");
+            Skip.IfNot(input.Any(kvp => problem.Equals(kvp.Key.GetType().Name)) || output.Any(kvp => problem.Equals(kvp.Key.GetType().Name)), "Problem not implemented yet");
 
-            KeyValuePair<Problem, ProblemData> kvp = _problemData.Single(kvp => problem.Equals(kvp.Key.GetType().Name));
-
-            Tuple<Result, Result> expected = kvp.Value.Result;
-            Tuple<Result, Result> found = kvp.Key.Solve(kvp.Value.Sample);
+            KeyValuePair<Problem, Tuple<Result, Result>> kvp = output.Single(kvp => problem.Equals(kvp.Key.GetType().Name));
+            
+            Tuple<Result, Result> expected = kvp.Value;
+            Tuple<Result, Result> found = kvp.Key.Solve(input[kvp.Key]);
 
             Assert.Equal(expected, found);
         }

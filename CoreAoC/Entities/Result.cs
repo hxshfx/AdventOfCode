@@ -22,15 +22,13 @@ namespace CoreAoC.Entities
         }
 
 
-
-        public override string ToString()
-            => Elapsed.HasValue ? $"{Answer} :: {Elapsed} ms" : Answer;
-
         public override bool Equals(object? obj)
-            => obj is Result result &&
-                Answer.Equals(result.Answer);
+            => obj is Result result && Answer.Equals(result.Answer);
 
         public override int GetHashCode()
             => HashCode.Combine(Answer);
+
+        public override string ToString()
+            => Elapsed.HasValue ? $"{Answer} @ {Elapsed} ms" : Answer;
     }
 }

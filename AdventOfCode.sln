@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode", "AdventOfCod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreAoC", "CoreAoC\CoreAoC.csproj", "{8CBC573D-481C-4132-91BB-94789FFF1C06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{A32A6F02-B06E-42BB-885D-D9A57C3A0CD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestingProject", "UnitTests\TestingProject.csproj", "{A32A6F02-B06E-42BB-885D-D9A57C3A0CD2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -7,61 +7,63 @@ namespace CoreAoC.Utils
         public static ProgressBarOptions MainOptions
             => new()
             {
-                BackgroundColor = ConsoleColor.DarkCyan,
+                BackgroundColor = ConsoleColor.DarkGray,
                 ForegroundColor = ConsoleColor.DarkCyan,
                 CollapseWhenFinished = false,
-                DenseProgressBar = true,
                 DisplayTimeInRealTime = false,
-                ProgressCharacter = '─',
-                ProgressBarOnBottom = true
+                ProgressBarOnBottom = true,
+                PercentageFormat = " ⸬ ⸬ {0:F0} % completado ⸬ ⸬ ",
+                ProgressCharacter = '━'
             };
 
-        public static ProgressBarOptions ProblemCorrectOptions
-            => new()
-            {
-                BackgroundColor = ConsoleColor.Green,
-                ForegroundColor = ConsoleColor.Green,
-                CollapseWhenFinished = false,
-                DenseProgressBar = true,
-                DisplayTimeInRealTime = false,
-                ProgressCharacter = '─',
-                ProgressBarOnBottom = false
-            };
-
-        public static ProgressBarOptions ProblemIncorrectOptions
-            => new()
-            {
-                BackgroundColor = ConsoleColor.Red,
-                ForegroundColor = ConsoleColor.Red,
-                CollapseWhenFinished = false,
-                DenseProgressBar = true,
-                DisplayTimeInRealTime = false,
-                ProgressCharacter = '─',
-                ProgressBarOnBottom = false
-            };
-
-        public static ProgressBarOptions ProblemUnimplementedOptions
+        public static ProgressBarOptions ProblemPackOptions
             => new()
             {
                 BackgroundColor = ConsoleColor.DarkGray,
                 ForegroundColor = ConsoleColor.DarkGray,
+                ForegroundColorDone = ConsoleColor.Green,
+                ForegroundColorError = ConsoleColor.DarkRed,
                 CollapseWhenFinished = false,
-                DenseProgressBar = true,
                 DisplayTimeInRealTime = false,
-                ProgressCharacter = '─',
-                ProgressBarOnBottom = false
+                ProgressBarOnBottom = true,
+                ProgressCharacter = '─'
             };
 
-        public static ProgressBarOptions ProblemWorkingOptions
+        public static ProgressBarOptions ProblemOptions
             => new()
             {
-                BackgroundColor = ConsoleColor.DarkYellow,
+                BackgroundColor = ConsoleColor.DarkGray,
                 ForegroundColor = ConsoleColor.DarkYellow,
+                ForegroundColorDone = ConsoleColor.Green,
+                ForegroundColorError = ConsoleColor.DarkRed,
                 CollapseWhenFinished = false,
-                DenseProgressBar = true,
                 DisplayTimeInRealTime = false,
-                ProgressCharacter = '─',
-                ProgressBarOnBottom = false
+                ProgressBarOnBottom = true,
+                ProgressCharacter = '─'
+            };
+
+        public static ProgressBarOptions PartImplementedOptions
+            => new()
+            {
+                ForegroundColor = ConsoleColor.DarkGreen,
+                ForegroundColorError = ConsoleColor.DarkRed,
+                CollapseWhenFinished = false,
+                DisableBottomPercentage = true,
+                DisplayTimeInRealTime = false,
+                ProgressBarOnBottom = true,
+                ProgressCharacter = '─'
+            };
+
+        public static ProgressBarOptions PartUnimplementedOptions
+            => new()
+            {
+                ForegroundColor = ConsoleColor.DarkGray,
+                ForegroundColorError = ConsoleColor.DarkRed,
+                CollapseWhenFinished = false,
+                DisableBottomPercentage = true,
+                DisplayTimeInRealTime = false,
+                ProgressBarOnBottom = true,
+                ProgressCharacter = '─'
             };
     }
 }

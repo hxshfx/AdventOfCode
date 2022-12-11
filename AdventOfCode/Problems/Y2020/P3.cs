@@ -1,7 +1,7 @@
 ﻿using CoreAoC.Entities;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("UnitTests")]
+[assembly: InternalsVisibleTo("TestingProject")]
 namespace AdventOfCode.Problems.Y2020
 {
     internal class P3 : Problem
@@ -14,8 +14,8 @@ namespace AdventOfCode.Problems.Y2020
             private const int COL_MOVEMENT = 3;
 
 
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeRecursive(lines).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines);
 
 
             private static int ComputeRecursive(IEnumerable<string> lines)
@@ -48,8 +48,8 @@ namespace AdventOfCode.Problems.Y2020
             private static readonly int[] ROW_MOVEMENTS = new int[] { 1, 1, 1, 1, 2 };
             private static readonly int[] COL_MOVEMENTS = new int[] { 1, 3, 5, 7, 1 };
 
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeRecursive(lines).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines);
 
 
             private static long ComputeRecursive(IEnumerable<string> lines)

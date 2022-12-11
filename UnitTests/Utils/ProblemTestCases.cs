@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace UnitTests.Utils
+namespace TestingProject.Utils
 {
     internal class ProblemTestCases : IEnumerable<object[]>
     {

@@ -1,7 +1,7 @@
 ﻿using CoreAoC.Entities;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("UnitTests")]
+[assembly: InternalsVisibleTo("TestingProject")]
 namespace AdventOfCode.Problems.Y2022
 {
     internal class P6 : Problem
@@ -10,16 +10,16 @@ namespace AdventOfCode.Problems.Y2022
         {
             private const int _GROUP_SIZE = 4;
 
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeRecursive(lines.Single(), _GROUP_SIZE, 0).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.Single(), _GROUP_SIZE, 0);
         }
 
         internal class P6_2 : Part
         {
             private const int _GROUP_SIZE = 14;
 
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeRecursive(lines.Single(), _GROUP_SIZE, 0).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.Single(), _GROUP_SIZE, 0);
         }
 
 

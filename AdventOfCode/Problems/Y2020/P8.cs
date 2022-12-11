@@ -1,15 +1,15 @@
 ﻿using CoreAoC.Entities;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("UnitTests")]
+[assembly: InternalsVisibleTo("TestingProject")]
 namespace AdventOfCode.Problems.Y2020
 {
     internal class P8 : Problem
     {
         internal class P8_1 : Part
         {
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeRecursive(lines.ToList(), Enumerable.Repeat(false, lines.Count()).ToList(), 0, 0).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.ToList(), Enumerable.Repeat(false, lines.Count()).ToList(), 0, 0);
 
 
             private static int ComputeRecursive(IList<string> lines, IList<bool> executed, int index, int result)
@@ -30,8 +30,8 @@ namespace AdventOfCode.Problems.Y2020
 
         internal class P8_2 : Part
         {
-            protected override string Compute(IEnumerable<string> lines)
-                => ComputeRecursive(lines.ToList(), Enumerable.Repeat(false, lines.Count()).ToList(), 0, 0).ToString();
+            protected override object Compute(IEnumerable<string> lines)
+                => ComputeRecursive(lines.ToList(), Enumerable.Repeat(false, lines.Count()).ToList(), 0, 0);
 
 
             private static int ComputeRecursive(IList<string> lines, IList<bool> executed, int index, int result)

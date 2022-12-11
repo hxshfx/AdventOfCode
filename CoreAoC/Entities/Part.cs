@@ -4,16 +4,15 @@ namespace CoreAoC.Entities
 {
     public abstract class Part
     {
-        protected readonly Stopwatch _sw = new();
-
-
-        protected Part()
-            => _sw.Start();
-
-
         public Result SolvePart(IEnumerable<string> lines)
-            => new(Compute(lines), _sw, GetType().Name);
+        {
+            Stopwatch sw = new();
+            sw.Start();
 
-        protected abstract string Compute(IEnumerable<string> lines);
+            object result = Compute(lines);
+            return new(result.ToString()!, sw, GetType().Name);
+        }
+
+        protected abstract object Compute(IEnumerable<string> lines);
     }
 }
