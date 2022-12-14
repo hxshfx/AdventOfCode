@@ -43,7 +43,10 @@ namespace TestingProject.Utils
             Tuple<Result, Result> expected = kvp.Value;
             Tuple<Result, Result> found = kvp.Key.Solve(input[kvp.Key]);
 
-            Assert.Equal(expected, found);
+            Assert.Multiple(
+                () => Assert.Equal(expected.Item1, found.Item1),
+                () => Assert.Equal(expected.Item2, found.Item2)
+            );
         }
     }
 }

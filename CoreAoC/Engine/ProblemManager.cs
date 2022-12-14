@@ -60,21 +60,18 @@ namespace CoreAoC.Engine
         }
 
 
-        private static void AllResult(IProgressBar progress, IList<IProgressBar> yearProgresses, IList<Tuple<Result, Result>?> result, int idx)
+        private static void AllResult(IProgressBar progress, IList<IProgressBar> yearProgresses, IList<Tuple<Result, Result>> result, int idx)
         {
-            if (result != null)
+            foreach (int _ in Enumerable.Range(0, result.Count))
             {
-                foreach (int _ in Enumerable.Range(0, result.Count))
-                {
-                    yearProgresses[idx].Tick();
-                    progress.Tick();
-                }
-
-                if (1d / 3 * 100 < yearProgresses[idx].Percentage && yearProgresses[idx].Percentage < 2d / 3 * 100)
-                    yearProgresses[idx].ForegroundColor = ConsoleColor.DarkYellow;
-                else if (2d / 3 * 100 < yearProgresses[idx].Percentage && yearProgresses[idx].Percentage < 100)
-                    yearProgresses[idx].ForegroundColor = ConsoleColor.Blue;
+                yearProgresses[idx].Tick();
+                progress.Tick();
             }
+
+            if (1d / 3 * 100 < yearProgresses[idx].Percentage && yearProgresses[idx].Percentage < 2d / 3 * 100)
+                yearProgresses[idx].ForegroundColor = ConsoleColor.DarkYellow;
+            else if (2d / 3 * 100 < yearProgresses[idx].Percentage && yearProgresses[idx].Percentage < 100)
+                yearProgresses[idx].ForegroundColor = ConsoleColor.Blue;
         }
 
         private static void YearResult(IProgressBar progress, IList<IProgressBar> yearProgresses, Tuple<Result, Result>? result, int day)

@@ -34,7 +34,7 @@ namespace AdventOfCode.Problems.Y2022
             foreach (string[] description in SplitBlocks(lines))
                 monkeys.Add(new(description));
 
-            Game game = new(monkeys, superWorried);
+            MonkeyTrouble game = new(monkeys, superWorried);
             foreach (int _ in Enumerable.Range(0, numberOfRounds))
                 game.NewRound();
 
@@ -59,8 +59,8 @@ namespace AdventOfCode.Problems.Y2022
                 IEnumerable<string> operation = description[2].Split("Operation: new = old ").Last().Split(' ');
                 _operation = BuildOperation(operation.First().Single(), operation.Last());
 
-                int divisor = int.Parse(description[3].Split("Test: divisible by").Last());
-                int thrown1 = int.Parse(description[4].Split("If true: throw to monkey ").Last()),
+                int divisor = int.Parse(description[3].Split("Test: divisible by").Last()),
+                    thrown1 = int.Parse(description[4].Split("If true: throw to monkey ").Last()),
                     thrown2 = int.Parse(description[5].Split("If false: throw to monkey ").Last());
                 _throwing = n => n % divisor == 0 ? thrown1 : thrown2;
 
@@ -93,18 +93,18 @@ namespace AdventOfCode.Problems.Y2022
                 };
         }
 
-        private sealed class Game
+        private sealed class MonkeyTrouble
         {
-            private readonly IDictionary<long, long> _inspectingCount;
+            private readonly IDictionary<int, int> _inspectingCount;
             private readonly IList<Monkey> _monkeys;
 
             private readonly long _lcm;
 
 
-            public Game(IList<Monkey> monkeys, bool superWorried)
+            public MonkeyTrouble(IList<Monkey> monkeys, bool superWorried)
             {
                 _monkeys = monkeys;
-                _inspectingCount = Enumerable.Range(0, _monkeys.Count).ToDictionary(i => (long)i, _ => 0L);
+                _inspectingCount = Enumerable.Range(0, _monkeys.Count).ToDictionary(i => i, _ => 0);
 
                 _lcm = superWorried ? monkeys.Select(m => m.Divisor).Aggregate(1L, (a, b) => a * b) : -1;
             }

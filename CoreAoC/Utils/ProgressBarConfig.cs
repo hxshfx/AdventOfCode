@@ -10,7 +10,6 @@ namespace CoreAoC.Utils
                 BackgroundColor = ConsoleColor.DarkGray,
                 ForegroundColor = ConsoleColor.DarkCyan,
                 CollapseWhenFinished = false,
-                DisplayTimeInRealTime = false,
                 ProgressBarOnBottom = true,
                 PercentageFormat = " ⸬ ⸬ {0:F0} % completado ⸬ ⸬ ",
                 ProgressCharacter = '━'
@@ -24,7 +23,6 @@ namespace CoreAoC.Utils
                 ForegroundColorDone = ConsoleColor.Green,
                 ForegroundColorError = ConsoleColor.DarkRed,
                 CollapseWhenFinished = false,
-                DisplayTimeInRealTime = false,
                 ProgressBarOnBottom = true,
                 ProgressCharacter = '─'
             };
@@ -37,7 +35,6 @@ namespace CoreAoC.Utils
                 ForegroundColorDone = ConsoleColor.Green,
                 ForegroundColorError = ConsoleColor.DarkRed,
                 CollapseWhenFinished = false,
-                DisplayTimeInRealTime = false,
                 ProgressBarOnBottom = true,
                 ProgressCharacter = '─'
             };
@@ -49,7 +46,6 @@ namespace CoreAoC.Utils
                 ForegroundColorError = ConsoleColor.DarkRed,
                 CollapseWhenFinished = false,
                 DisableBottomPercentage = true,
-                DisplayTimeInRealTime = false,
                 ProgressBarOnBottom = true,
                 ProgressCharacter = '─'
             };
@@ -61,7 +57,6 @@ namespace CoreAoC.Utils
                 ForegroundColorError = ConsoleColor.DarkRed,
                 CollapseWhenFinished = false,
                 DisableBottomPercentage = true,
-                DisplayTimeInRealTime = false,
                 ProgressBarOnBottom = true,
                 ProgressCharacter = '─'
             };

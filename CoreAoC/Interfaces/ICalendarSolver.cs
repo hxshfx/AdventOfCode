@@ -10,7 +10,7 @@ namespace CoreAoC.Interfaces
         public int Year { get; }
 
 
-        public IList<Tuple<Result, Result>?> SolveAll();
+        public IList<Tuple<Result, Result>> SolveAll();
         
         public Tuple<Result, Result>? SolveOne(int day);
     }
